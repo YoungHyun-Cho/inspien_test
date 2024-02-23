@@ -3,9 +3,13 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RestApiClient {
+public class RestApiClient implements Client {
 
-    public String request() {
+    private static final Integer CONN_TIMEOUT = 5000;
+    private static final Integer READ_TIMEOUT = 3000;
+
+    @Override
+    public String request(String data, String apiUrl) {
         URL url = null;
         String readLine = null;
         StringBuilder buffer = null;
@@ -14,29 +18,18 @@ public class RestApiClient {
         BufferedWriter bufferedWriter = null;
         HttpURLConnection urlConnection = null;
 
-        int connTimeout = 5000;
-        int readTimeout = 3000;
-
-        String sendData =
-                "{" +
-                        "\"NAME\" : \"조영현테스트\"," +
-                        "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
-                        "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
-                        "}";
-        String apiUrl = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
-
         try {
             url = new URL(apiUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
-            urlConnection.setConnectTimeout(connTimeout);
-            urlConnection.setReadTimeout(readTimeout);
+            urlConnection.setConnectTimeout(CONN_TIMEOUT);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
             urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
             urlConnection.setDoOutput(true);
 
             outputStream = urlConnection.getOutputStream();
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            bufferedWriter.write(sendData);
+            bufferedWriter.write(data);
             bufferedWriter.flush();
 
             buffer = new StringBuilder();
@@ -70,4 +63,3 @@ public class RestApiClient {
         return buffer.toString();
     }
 }
-

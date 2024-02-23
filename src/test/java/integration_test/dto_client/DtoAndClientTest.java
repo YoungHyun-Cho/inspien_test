@@ -16,10 +16,19 @@ public class DtoAndClientTest {
     @DisplayName("요청 전송 후 응답으로 전송 받은 JSON 문자열을 DTO로 변환할 수 있어야 한다.")
     public void requestAndParseJson() throws JsonProcessingException {
         RestApiClient restApiClient = new RestApiClient();
-        String json = restApiClient.request();
+
+        String testData =
+                "{" +
+                        "\"NAME\" : \"조영현\"," +
+                        "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
+                        "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
+                "}";
+        String testUrl = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
+
+        String response = restApiClient.request(testData, testUrl);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ResponseDto responseDto = objectMapper.readValue(json, new TypeReference<ResponseDto>() {});
+        ResponseDto responseDto = objectMapper.readValue(response, new TypeReference<ResponseDto>() {});
 
         assertThat(responseDto)
                 .hasFieldOrProperty("xmlData")
