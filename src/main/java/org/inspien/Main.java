@@ -1,12 +1,12 @@
 package org.inspien;
 
-import org.inspien.app.ClientApp;
+import org.inspien.app.InspienCodingTestApp;
 import org.inspien.config.AppConfigurer;
 
 public class Main {
     public static void main(String[] args) {
         AppConfigurer appConfigurer = new AppConfigurer();
-        ClientApp clientApp = new ClientApp(appConfigurer.client()); // DI
-        clientApp.run();
+        InspienCodingTestApp inspienCodingTestApp = new InspienCodingTestApp(appConfigurer.client()); // DI
+        inspienCodingTestApp.run();
     }
 }

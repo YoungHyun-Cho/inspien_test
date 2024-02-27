@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.inspien.client.RestApiClient;
+import org.inspien.dto.order.SalesStatus;
 import org.inspien.dto.response.Response;
+import org.inspien.parser.Mapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,26 +19,24 @@ public class FetchTest {
     public void requestAndParseJson() throws JsonProcessingException {
         RestApiClient restApiClient = new RestApiClient();
 
-        String testData =
+        String input =
                 "{" +
                         "\"NAME\" : \"조영현\"," +
                         "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
                         "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
                 "}";
-        String testUrl = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
+        String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
 
-        String response = restApiClient.request(testData, testUrl);
+        // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
+        Response response = Mapper.strToResponse(restApiClient.requestDataAndConnInfo(input, url));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Response responseDto = objectMapper.readValue(response, new TypeReference<Response>() {});
-
-        assertThat(responseDto)
+        assertThat(response)
                 .hasFieldOrProperty("xmlData")
                 .hasFieldOrProperty("jsonData")
-                .hasFieldOrProperty("databaseConnInfo")
+                .hasFieldOrProperty("dbConnInfo")
                 .hasFieldOrProperty("ftpConnInfo");
 
-        assertThat(responseDto.getDbConnInfo())
+        assertThat(response.getDbConnInfo())
                 .hasFieldOrProperty("host")
                 .hasFieldOrProperty("port")
                 .hasFieldOrProperty("user")
@@ -44,7 +44,7 @@ public class FetchTest {
                 .hasFieldOrProperty("sid")
                 .hasFieldOrProperty("tableName");
 
-        assertThat(responseDto.getFtpConnInfo())
+        assertThat(response.getFtpConnInfo())
                 .hasFieldOrProperty("host")
                 .hasFieldOrProperty("port")
                 .hasFieldOrProperty("user")

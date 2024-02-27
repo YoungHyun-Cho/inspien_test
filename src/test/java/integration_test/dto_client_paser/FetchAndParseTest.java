@@ -30,10 +30,10 @@ public class FetchAndParseTest {
         String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
 
         // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
-        Response responseDto = Mapper.strToResponse(restApiClient.request(input, url));
+        Response response = Mapper.strToResponse(restApiClient.requestDataAndConnInfo(input, url));
 
         // XML_DATA를 Java Object로 변환
-        SalesStatus salesStatus = Mapper.xmlStringToObject(responseDto.getXmlData());
+        SalesStatus salesStatus = Mapper.xmlStringToObject(response.getXmlData());
 
         // HEADER가 orders로 정확히 변환되었는지 확인
         Order firstOrder = salesStatus.getOrders().get(0);
@@ -56,5 +56,13 @@ public class FetchAndParseTest {
         assertThat(firstItem.getQuantity()).isEqualTo(1);
         assertThat(firstItem.getName()).isEqualTo("아이폰케이스");
         assertThat(firstItem.getColor()).isEqualTo("흰색");
+
+        // 일단 Connection Info부터 확인해보자.
+        System.out.println("HOST       : " + response.getDbConnInfo().getHost());
+        System.out.println("USER       : " + response.getDbConnInfo().getUser());
+        System.out.println("SID        : " + response.getDbConnInfo().getSid());
+        System.out.println("PASSWORD   : " + response.getDbConnInfo().getPassword());
+        System.out.println("TABLE_NAME : " + response.getDbConnInfo().getTableName());
+        System.out.println("PORT       : " + response.getDbConnInfo().getPort());
     }
 }

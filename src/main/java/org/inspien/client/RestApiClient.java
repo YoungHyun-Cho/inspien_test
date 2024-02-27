@@ -1,4 +1,6 @@
 package org.inspien.client;
+import org.inspien.dto.order.SalesStatus;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -9,7 +11,7 @@ public class RestApiClient implements Client {
     private static final Integer READ_TIMEOUT = 3000;
 
     @Override
-    public String request(String data, String apiUrl) {
+    public String requestDataAndConnInfo(String data, String apiUrl) {
         URL url = null;
         String readLine = null;
         StringBuilder buffer = null;
@@ -61,5 +63,10 @@ public class RestApiClient implements Client {
         }
 
         return buffer.toString();
+    }
+
+    @Override
+    public void insertData(SalesStatus salesStatus) {
+
     }
 }

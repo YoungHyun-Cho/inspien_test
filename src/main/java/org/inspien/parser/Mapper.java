@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 public class Mapper {
@@ -37,7 +38,6 @@ public class Mapper {
 //        Response responseDto = objectMapper.readValue(decodedStr, new TypeReference<Response>() {});
     }
 
-    // 추후 Java Object를 리턴하도록 수정 필요
     public static SalesStatus xmlStringToObject(String base64EncodedString) throws ParserConfigurationException, SAXException, IOException {
         String decodedStr = decode(base64EncodedString, CharSet.EUC_KR);
         Document document = parse(decodedStr);
@@ -77,11 +77,11 @@ public class Mapper {
 
                 switch (nodeName) {
                     case "ORDER_ID"      -> order.setUserId(content);
-                    case "ORDER_NUM"     -> order.setNumber(Integer.parseInt(content));
-                    case "ORDER_PRICE"   -> order.setPrice(Integer.parseInt(content));
-                    case "ORDER_QTY"     -> order.setQuantity(Integer.parseInt(content));
-                    case "ORDER_DATE"    -> order.setDate(LocalDate.parse(content));
-                    case "ETA_DATE"      -> order.setEtaDate(LocalDate.parse(content));
+                    case "ORDER_NUM"     -> order.setNumber(content);
+                    case "ORDER_PRICE"   -> order.setPrice(content);
+                    case "ORDER_QTY"     -> order.setQuantity(content);
+                    case "ORDER_DATE"    -> order.setDate(content);
+                    case "ETA_DATE"      -> order.setEtaDate(content);
                     case "RECEIVER_NAME" -> order.setReceiverName(content);
                     case "RECEIVER_NO"   -> order.setReceiverPhone(content);
                     case "DESTINATION"   -> order.setDestination(content);
@@ -109,12 +109,12 @@ public class Mapper {
                 String content = el.getTextContent();
 
                 switch (nodeName) {
-                    case "ORDER_NUM"  -> item.setOrderNumber(Integer.parseInt(content));
-                    case "ITEM_SEQ"   -> item.setSequence(Integer.parseInt(content));
-                    case "ITEM_PRICE" -> item.setPrice(Integer.parseInt(content));
-                    case "ITEM_QTY"   -> item.setQuantity(Integer.parseInt(content));
+                    case "ORDER_NUM"  -> item.setOrderNumber(content);
+                    case "ITEM_SEQ"   -> item.setSequence(content);
+                    case "ITEM_PRICE" -> item.setPrice(content);
+                    case "ITEM_QTY"   -> item.setQuantity(content);
                     case "ITEM_NAME"  -> item.setName(content);
-                    case "ITEM_COLOR" -> item.setColor(content);
+                    case "ITEM_COLOR" -> item.setColor(content.isEmpty() ? "NULL" : content);
                 }
             }
             items.add(item);
@@ -124,5 +124,33 @@ public class Mapper {
 
     public static Response strToResponse(String response) throws JsonProcessingException {
         return new ObjectMapper().readValue(response, new TypeReference<Response>() {});
+    }
+
+    public static HashMap<String, String> orderToHashMap(Order order) {
+        HashMap<String, String> hashMap = new HashMap();
+        hashMap.put("tableName", "ORDERS");
+        hashMap.put("ORDER_NUM", order.getNumber());
+        hashMap.put("ORDER_ID", order.getUserId());
+        hashMap.put("ORDER_DATE", order.getDate());
+        hashMap.put("ORDER_PRICE", order.getPrice());
+        hashMap.put("ORDER_QTY", order.getQuantity());
+        hashMap.put("RECEIVER_NAME", order.getReceiverName());
+        hashMap.put("RECEIVER_NO", order.getReceiverPhone());
+        hashMap.put("ETA_DATE", order.getEtaDate());
+        hashMap.put("DESTINATION", order.getDestination());
+        hashMap.put("DESCIPTION", order.getMessage());
+        return hashMap;
+    }
+
+    public static HashMap<String, String> itemToHashMap(Item item) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("tableName", "ITEM");
+        hashMap.put("ORDER_NUM", item.getOrderNumber());
+        hashMap.put("ITEM_NAME", item.getName());
+        hashMap.put("ITEM_QTY", item.getQuantity());
+        hashMap.put("ITEM_PRICE", item.getPrice());
+        hashMap.put("ITEM_SEQ", item.getSequence());
+        hashMap.put("ITEM_COLOR", item.getColor());
+        return hashMap;
     }
 }

@@ -20,12 +20,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Item {
-    private Integer orderNumber; // ORDER_NUM
-    private Integer sequence;    // ITEM_SEQ
-    private Integer price;       // ITEM_PRICE
-    private Integer quantity;    // ITEM_QTY
-    private String name;         // ITEM_NAME
-    private String color;        // ITEM_COLOR
+    private String orderNumber; // ORDER_NUM
+    private String sequence;    // ITEM_SEQ
+    private String price;       // ITEM_PRICE
+    private String quantity;    // ITEM_QTY
+    private String name;        // ITEM_NAME
+    private String color;       // ITEM_COLOR
 
     @Override
     public String toString() {
@@ -36,6 +36,6 @@ public class Item {
                 ", quantity=" + quantity +
                 ", name='" + name + '\'' +
                 ", color='" + color + '\'' +
-                '}';
+        '}';
     }
 }

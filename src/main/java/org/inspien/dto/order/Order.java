@@ -26,18 +26,18 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class Order {
-    private String userId;         // ORDER_ID
-    private Integer number;        // ORDER_NUM
-    private Integer price;         // ORDER_PRICE
-    private Integer quantity;      // ORDER_QTY
-    private LocalDate date;        // ORDER_DATE
-    private LocalDate etaDate;     // ETA_DATE
+    private String userId;        // ORDER_ID
+    private String number;        // ORDER_NUM
+    private String price;         // ORDER_PRICE
+    private String quantity;      // ORDER_QTY
+    private String date;          // ORDER_DATE
+    private String etaDate;       // ETA_DATE
 
-    private String receiverName;   // RECEIVER_NAME
-    private String receiverPhone;  // RECEIVER_NO
+    private String receiverName;  // RECEIVER_NAME
+    private String receiverPhone; // RECEIVER_NO
 
-    private String destination;    // DESTINATION
-    private String message;        // DESCRIPTION
+    private String destination;   // DESTINATION
+    private String message;       // DESCRIPTION
 
     @Override
     public String toString() {
@@ -52,6 +52,6 @@ public class Order {
                 ", receiverPhone='" + receiverPhone + '\'' +
                 ", destination='" + destination + '\'' +
                 ", message='" + message + '\'' +
-                '}';
+        '}';
     }
 }

@@ -1,5 +1,8 @@
 package org.inspien.client;
 
+import org.inspien.dto.order.SalesStatus;
+
 public interface Client {
-    String request(String data, String url);
+    String requestDataAndConnInfo(String data, String url);
+    void insertData(SalesStatus salesStatus);
 }

@@ -21,7 +21,7 @@ public class RestApiClientTest {
                 "}";
         String testUrl = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
 
-        String response = restApiClient.request(testData, testUrl);
+        String response = restApiClient.requestDataAndConnInfo(testData, testUrl);
 
         assertThat(response)
                 .contains("XML_DATA")
