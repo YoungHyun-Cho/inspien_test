@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FtpConnInfoDto {
+public class FTPConnInfo {
     @JsonProperty("HOST")
     private String host;
 

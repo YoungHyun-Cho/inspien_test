@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDto {
+public class Response {
     @JsonProperty("XML_DATA")
     private String xmlData;
 
@@ -16,8 +16,8 @@ public class ResponseDto {
     private String jsonData;
 
     @JsonProperty("DB_CONN_INFO")
-    private DatabaseConnInfoDto databaseConnInfo;
+    private DBConnInfo dbConnInfo;
 
     @JsonProperty("FTP_CONN_INFO")
-    private FtpConnInfoDto ftpConnInfo;
+    private FTPConnInfo ftpConnInfo;
 }

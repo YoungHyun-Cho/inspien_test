@@ -3,7 +3,7 @@ package unit_test.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.inspien.dto.request.RequestDto;
+import org.inspien.dto.request.UsertInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +17,9 @@ public class DtoTest {
     @Test
     @DisplayName("DTO -> JSON")
     public void dtoToJson() throws JsonProcessingException {
-        RequestDto requestDto = new RequestDto("조영현", "010-1234-1234", "0hyuncho@gmail.com");
+        UsertInfo usertInfo = new UsertInfo("조영현", "010-1234-1234", "0hyuncho@gmail.com");
 
-        String json = objectMapper.writeValueAsString(requestDto);
+        String json = objectMapper.writeValueAsString(usertInfo);
 
         assertThat(json).isEqualTo(JSON_STRING);
     }
@@ -27,10 +27,10 @@ public class DtoTest {
     @Test
     @DisplayName("JSON -> DTO")
     public void jsonToDto() throws JsonProcessingException {
-        RequestDto requestDto = objectMapper.readValue(JSON_STRING, new TypeReference<RequestDto>() {});
+        UsertInfo usertInfo = objectMapper.readValue(JSON_STRING, new TypeReference<UsertInfo>() {});
 
-        assertThat(requestDto.getName()).isEqualTo("조영현");
-        assertThat(requestDto.getPhoneNumber()).isEqualTo("010-1234-1234");
-        assertThat(requestDto.getEmail()).isEqualTo("0hyuncho@gmail.com");
+        assertThat(usertInfo.getName()).isEqualTo("조영현");
+        assertThat(usertInfo.getPhoneNumber()).isEqualTo("010-1234-1234");
+        assertThat(usertInfo.getEmail()).isEqualTo("0hyuncho@gmail.com");
     }
 }

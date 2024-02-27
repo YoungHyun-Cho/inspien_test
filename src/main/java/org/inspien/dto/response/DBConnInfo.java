@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DatabaseConnInfoDto {
+public class DBConnInfo {
     @JsonProperty("HOST")
     private String host;
 

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.inspien.client.RestApiClient;
-import org.inspien.dto.response.ResponseDto;
+import org.inspien.dto.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DtoAndClientTest {
+public class FetchTest {
 
     @Test
     @DisplayName("요청 전송 후 응답으로 전송 받은 JSON 문자열을 DTO로 변환할 수 있어야 한다.")
@@ -28,7 +28,7 @@ public class DtoAndClientTest {
         String response = restApiClient.request(testData, testUrl);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ResponseDto responseDto = objectMapper.readValue(response, new TypeReference<ResponseDto>() {});
+        Response responseDto = objectMapper.readValue(response, new TypeReference<Response>() {});
 
         assertThat(responseDto)
                 .hasFieldOrProperty("xmlData")
@@ -36,7 +36,7 @@ public class DtoAndClientTest {
                 .hasFieldOrProperty("databaseConnInfo")
                 .hasFieldOrProperty("ftpConnInfo");
 
-        assertThat(responseDto.getDatabaseConnInfo())
+        assertThat(responseDto.getDbConnInfo())
                 .hasFieldOrProperty("host")
                 .hasFieldOrProperty("port")
                 .hasFieldOrProperty("user")

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDto {
+public class UsertInfo {
     @JsonProperty("NAME")
     private String name;
 
