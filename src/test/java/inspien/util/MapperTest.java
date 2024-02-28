@@ -1,6 +1,9 @@
-package integration_test.dto_client_paser;
+package inspien.util;
 
-import org.inspien.client.api.JavaApiClient;
+import org.inspien._config.AppConfigurer;
+import org.inspien.client.api.ApacheApiClient;
+import org.inspien.client.api.ApiClient;
+import org.inspien.data.json.Record;
 import org.inspien.data.xml.Item;
 import org.inspien.data.xml.Order;
 import org.inspien.data.xml.ParsedXmlData;
@@ -15,22 +18,20 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class FetchAndParseTest {
+public class MapperTest {
+
+    private final ApiClient apiClient = new ApacheApiClient();
 
     @Test
-    public void fetchXmlAndParse() throws ParserConfigurationException, SAXException, IOException {
-        JavaApiClient javaApiClient = new JavaApiClient();
-
-        String input =
-                "{" +
-                        "\"NAME\" : \"조영현\"," +
-                        "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
-                        "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
-                "}";
-        String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
+    public void xmlToObjectTest() throws ParserConfigurationException, SAXException, IOException {
 
         // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
-        Response response = Mapper.mapToResponse(javaApiClient.sendApiRequest(input, url));
+        Response response = Mapper.mapToResponse(
+                apiClient.sendApiRequest(
+                        AppConfigurer.getUserInfo().serialize(),
+                        AppConfigurer.getAPI_URL()
+                )
+        );
 
         // XML_DATA를 Java Object로 변환
         ParsedXmlData parsedXmlData = Mapper.xmlDataToObject(response.getXmlData());
@@ -48,7 +49,7 @@ public class FetchAndParseTest {
         assertThat(firstOrder.getDestination()).isEqualTo("서울시 서초구 방배동 801");
         assertThat(firstOrder.getMessage()).isEqualTo("현관앞에 놓아주세요");
 
-        // DETAIL가 items로 정확히 변환되었는지 확인
+        // DETAIL이 items로 정확히 변환되었는지 확인
         Item firstItem = parsedXmlData.getItems().get(0);
         assertThat(firstItem.getOrderNumber()).isEqualTo("1000");
         assertThat(firstItem.getSequence()).isEqualTo("1");
@@ -59,24 +60,34 @@ public class FetchAndParseTest {
     }
 
     @Test
-    public void fetchJsonAndParse() throws ParserConfigurationException, SAXException, IOException {
-        JavaApiClient javaApiClient = new JavaApiClient();
-
-        String input =
-                "{" +
-                        "\"NAME\" : \"조영현\"," +
-                        "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
-                        "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
-                        "}";
-        String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
+    public void jsonToObjectTest() throws IOException {
 
         // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
-        Response response = Mapper.mapToResponse(javaApiClient.sendApiRequest(input, url));
+        Response response = Mapper.mapToResponse(
+                apiClient.sendApiRequest(
+                        AppConfigurer.getUserInfo().serialize(),
+                        AppConfigurer.getAPI_URL()
+                )
+        );
 
         // JSON_DATA를 Java Object로 변환
         ParsedJsonData parsedJsonData = Mapper.jsonDataToObject(response.getJsonData());
 
-//        System.out.println(records);
-        System.out.println(response.getFtpConnInfo());
+        // List<Record>에서 맨 앞 요소를 기준으로, 데이터가 잘 변환되었는지 확인
+        Record record = parsedJsonData.getRecords().get(0);
+        assertThat(record.getName()).isEqualTo("Baxter Chang Özbey");
+        assertThat(record.getPhone()).isEqualTo("076 2957 1961");
+        assertThat(record.getEmail()).isEqualTo("id.enim.Curabitur@Crasdictum.com");
+        assertThat(record.getBirthDate()).isEqualTo("1981/09/14");
+        assertThat(record.getCompany()).isEqualTo("Sem Institute");
+        assertThat(record.getPersonalNumber()).isEqualTo("16550126 7313");
+        assertThat(record.getOrganizationNumber()).isEqualTo("978436-9705");
+        assertThat(record.getCountry()).isEqualTo("Kenya");
+        assertThat(record.getRegion()).isEqualTo("South Sumatra");
+        assertThat(record.getCity()).isEqualTo("Palembang");
+        assertThat(record.getStreet()).isEqualTo("9980 Lacus. Avenue");
+        assertThat(record.getZipCode()).isEqualTo("86867");
+        assertThat(record.getCreditCard()).isEqualTo("4539184335316");
+        assertThat(record.getGuid()).isEqualTo("5DD3E3BF-A039-B909-326B-460396CD5CF6");
     }
 }

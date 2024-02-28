@@ -32,15 +32,18 @@ public class InspienCodingTest {
     private final RemoteOracleDbmsClient remoteOracleDbmsClient;
     private final FtpClient ftpClient;
 
-    public void run() { // 🟥 예외 수정 필요
+    public void run() {
         try {
             Response response = getDataAndConnInfo(); // 과제 구현 사항 1️⃣ & 2️⃣
             insertToRemoteDb(response);               // 과제 구현 사항 3️⃣
             uploadToFtpServer(response);              // 과제 구현 사항 4️⃣
         }
         catch (Exception e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("✅ APPLICATION FINISHED");
     }
 
     // 과제 구현 사항 1️⃣ & 2️⃣
@@ -48,6 +51,7 @@ public class InspienCodingTest {
     private Response getDataAndConnInfo() throws IOException {
         String json = AppConfigurer.getUserInfo().serialize();
         String response = apiClient.sendApiRequest(json, AppConfigurer.getAPI_URL());
+        System.out.println("✅ API REQUEST : SUCCESS");
         return Mapper.mapToResponse(response);
     }
 
@@ -58,7 +62,9 @@ public class InspienCodingTest {
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
         insertToLocalDb(Mapper.xmlDataToObject(response.getXmlData()));
         ArrayList<HashMap<String, String>> joined = joinInLocalDb();
-//        remoteOracleDbmsClient.createJoinedData(joined); // 🟥 임시 주석
+        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
+        remoteOracleDbmsClient.createJoinedData(joined);
+        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT SUCCESS");
     }
 
     // 과제 구현 사항 4️⃣
@@ -67,39 +73,45 @@ public class InspienCodingTest {
         ftpClient.setFtpConnInfo(response.getFtpConnInfo());
         String content = handleJsonData(response.getJsonData());
         String fileName = composeFileName();
-//        ftpClient.upload(fileName, content); // 🟥 임시 주석
+        ftpClient.upload(fileName, content);
     }
 
     // Local ORACLE DBMS에 Order와 Item의 데이터를 저장한다.
     private void insertToLocalDb(ParsedXmlData parsedXmlData) throws SQLException, ClassNotFoundException {
+        System.out.println("✅ LOCAL ORACLE DBMS : INSERT START");
         for (Order order : parsedXmlData.getOrders()) {
             localOracleDbmsClient.createOrder(order);
         }
+        System.out.println("    ORDER INSERTED");
         for (Item item : parsedXmlData.getItems()) {
             localOracleDbmsClient.createItem(item);
         }
+        System.out.println("    ITEM INSERTED");
+        System.out.println("✅ LOCAL ORACLE DBMS : INSERT SUCCESS");
     }
 
     // Local ORACLE DBMS에서 Order와 Item의 데이터를 조인하여 조회한 데이터를 컬렉션에 담아 리턴한다.
     private ArrayList<HashMap<String, String>> joinInLocalDb() throws SQLException, ClassNotFoundException {
-        // 조인 후 컬렉션으로 저장
+        System.out.println("✅ LOCAL ORACLE DBMS : JOIN START");
         HashMap<String, String> data = new HashMap<>();
         data.put("tableName", "ORDERS");
+        data.put("naturalJoin", "ITEM");
         data.put("columns", "*");
-        data.put("orderBy", "");
-        return localOracleDbmsClient.findOrderItem(data);
+        ArrayList<HashMap<String, String>> joined = localOracleDbmsClient.findOrderItem(data);
+        System.out.println("✅ LOCAL ORACLE DBMS : JOIN SUCCESS");
+        return joined;
     }
 
     // JSON 문자열을 입력 받아 과제가 구분자(^)와 개행(\n)을 적절히 추가하여 리턴한다.
     private static String handleJsonData(String jsonData) throws JsonProcessingException , UnsupportedEncodingException {
-        // Json 데이터를 Java Object로 변환
+        System.out.println("✅ JSON_DATA : PROCESSING START");
         ParsedJsonData parsedJsonData = Mapper.jsonDataToObject(jsonData);
 
         // 구분자와 개행자 추가
         StringBuilder stringBuilder = new StringBuilder();
         parsedJsonData.getRecords().stream()
                 .forEach(record -> stringBuilder.append(record.serialize()));
-
+        System.out.println("✅ JSON_DATA : PROCESSING SUCCESS");
         return stringBuilder.toString();
     }
 

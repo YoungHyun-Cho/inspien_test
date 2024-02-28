@@ -22,9 +22,9 @@ public class RemoteOracleDbmsClient extends DbmsClient {
     }
 
 
-    public void findInsertedData(HashMap<String, String> data) throws ClassNotFoundException, SQLException {
+    public ArrayList<HashMap<String, String>> findInsertedData(HashMap<String, String> data) throws ClassNotFoundException, SQLException {
         checkDbConnInfo();
-        find(SqlGenerator.select(data));
+        return find(SqlGenerator.select(data));
     }
 
     public void createJoinedData(ArrayList<HashMap<String, String>> joinedData) throws SQLException, ClassNotFoundException {
@@ -37,7 +37,7 @@ public class RemoteOracleDbmsClient extends DbmsClient {
         }
     }
 
-    private void find(String query) throws ClassNotFoundException, SQLException {
+    private ArrayList<HashMap<String, String>> find(String query) throws ClassNotFoundException, SQLException {
         Connection connection = connect(dbConnInfo);
 
         Statement statement = connection.createStatement();
@@ -59,7 +59,6 @@ public class RemoteOracleDbmsClient extends DbmsClient {
         statement.close();
         connection.close();
 
-        System.out.println(arrayList);
-        System.out.println("🟥 COUNT : " + arrayList.size());
+        return arrayList;
     }
 }

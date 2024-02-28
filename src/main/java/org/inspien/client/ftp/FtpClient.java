@@ -20,61 +20,75 @@ public class FtpClient {
         if (ftpConnInfo == null) throw new FtpConnectionInfoNotExistException();
     }
 
-    public void upload(String fileName, String fileData) {
+    public void upload(String fileName, String fileData) throws IOException {
         checkDbConnInfo();
+        System.out.println("✅ INSPIEN FTP SERVER : UPLOAD START");
         FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
-            ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            ftpClient.enterLocalPassiveMode();
+        ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
+        ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
+        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        ftpClient.enterLocalPassiveMode();
 
-            InputStream inputStream = new ByteArrayInputStream(fileData.getBytes());
-            boolean done = ftpClient.storeFile(ftpConnInfo.getFilePath() + fileName, inputStream);
+        InputStream inputStream = new ByteArrayInputStream(fileData.getBytes());
+        boolean done = ftpClient.storeFile(ftpConnInfo.getFilePath() + fileName, inputStream);
 
-            if (done) System.out.println("🟥 UPLOAD SUCCESS");
-            else System.out.println("❌ UPLOAD FAIL");
+        if (done) System.out.println("✅ INSPIEN FTP SERVER : UPLOAD SUCCESS");
+        else System.out.println("❌ INSPIEN FTP SERVER : UPLOAD FAIL");
 
-            System.out.println("🟥 REPLY CODE   : " + ftpClient.getReplyCode());
-            System.out.println("🟥 REPLY STRING : " + ftpClient.getReplyString());
+        System.out.println("    REPLY CODE   : " + ftpClient.getReplyCode());
+        System.out.println("    REPLY STRING : " + ftpClient.getReplyString());
 
-            ftpClient.logout();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if (ftpClient.isConnected()) ftpClient.disconnect();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        ftpClient.logout();
+
+        if (ftpClient.isConnected()) ftpClient.disconnect();
+
     }
 
-    public void download(String remoteFileName, String localFilePath) {
+    public void download(String remoteFileName, String localFilePath) throws IOException {
         checkDbConnInfo();
-        try (OutputStream outputStream = new FileOutputStream(localFilePath)) {
-            FTPClient ftpClient = new FTPClient();
-            ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
-            ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
-            ftpClient.enterLocalPassiveMode();
 
-            boolean done = ftpClient.retrieveFile(ftpConnInfo.getFilePath() + remoteFileName, outputStream);
-            if (done) System.out.println("🟥 DOWNLOAD SUCCESS");
-            else System.out.println("❌ DOWNLOAD FAIL");
+        OutputStream outputStream = new FileOutputStream(localFilePath);
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
+        ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
+        ftpClient.enterLocalPassiveMode();
 
-            System.out.println("🟥 REPLY CODE   : " + ftpClient.getReplyCode());
-            System.out.println("🟥 REPLY STRING : " + ftpClient.getReplyString());
+        boolean done = ftpClient.retrieveFile(ftpConnInfo.getFilePath() + remoteFileName, outputStream);
+        if (done) System.out.println("🟥 DOWNLOAD SUCCESS");
+        else System.out.println("❌ DOWNLOAD FAIL");
 
-            FTPFile[] files = ftpClient.listFiles();
-            for (FTPFile file : files) {
-                System.out.println(file.getName());
-            }
+        System.out.println("🟥 REPLY CODE   : " + ftpClient.getReplyCode());
+        System.out.println("🟥 REPLY STRING : " + ftpClient.getReplyString());
+
+        FTPFile[] files = ftpClient.listFiles();
+        for (FTPFile file : files) {
+            System.out.println(file.getName());
         }
-        catch (IOException e) {
-            e.printStackTrace();
+
+        outputStream.close();
+    }
+
+    public void check(String remoteFileName, String localFilePath) throws IOException {
+        checkDbConnInfo();
+
+        OutputStream outputStream = new FileOutputStream(localFilePath);
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
+        ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
+        ftpClient.enterLocalPassiveMode();
+
+        boolean done = ftpClient.retrieveFile(ftpConnInfo.getFilePath() + remoteFileName, outputStream);
+        if (done) System.out.println("🟥 DOWNLOAD SUCCESS");
+        else System.out.println("❌ DOWNLOAD FAIL");
+
+        System.out.println("🟥 REPLY CODE   : " + ftpClient.getReplyCode());
+        System.out.println("🟥 REPLY STRING : " + ftpClient.getReplyString());
+
+        FTPFile[] files = ftpClient.listFiles();
+        for (FTPFile file : files) {
+            System.out.println(file.getName());
         }
+
+        outputStream.close();
     }
 }

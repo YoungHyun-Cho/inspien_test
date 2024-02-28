@@ -20,8 +20,10 @@ public class SqlGenerator {
                 .append(data.get("columns"))
                 .append(" FROM ")
                 .append(data.get("tableName"))
+                .append(data.containsKey("naturalJoin") ? " NATURAL JOIN " + data.get("naturalJoin") : "")
+                .append(data.containsKey("join") ? " JOIN " + data.get("join") : "")
                 .append(data.containsKey("where") ? " WHERE " + data.get("where") : "")
-                .append(data.containsKey("orderBy") ? " ORDER BY " + data.get("order") : "")
+                .append(data.containsKey("orderBy") ? " ORDER BY " + data.get("orderBy") : "")
                 .toString();
     }
 
