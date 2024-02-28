@@ -1,12 +1,16 @@
 package org.inspien;
 
-import org.inspien.app.InspienCodingTestApp;
-import org.inspien.config.AppConfigurer;
+import org.inspien._config.AppConfigurer;
 
 public class Main {
     public static void main(String[] args) {
-        AppConfigurer appConfigurer = new AppConfigurer();
-        InspienCodingTestApp inspienCodingTestApp = new InspienCodingTestApp(appConfigurer.client()); // DI
-        inspienCodingTestApp.run();
+        InspienCodingTest inspienCodingTest = new InspienCodingTest(
+                AppConfigurer.client(),
+                AppConfigurer.localOracleDbmsClient(),
+                AppConfigurer.remoteOracleDbmsClient(),
+                AppConfigurer.ftpClient()
+        );
+
+        inspienCodingTest.run();
     }
 }

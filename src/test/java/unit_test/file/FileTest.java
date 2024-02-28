@@ -1,6 +1,6 @@
 package unit_test.file;
 
-import org.inspien.file.FileHandler;
+import org.inspien.util.FileHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.io.IOException;
 public class FileTest {
 
     private static final String PATH = "/Users/0hyuncho/Desktop/inspien_code_temp_test";
-    private static final String FILE_NAME = "/test.txt";
+    private static final String FILE_NAME = "/test123123.txt";
     private static final String TEST_DATA = "INSPIEN\nINSPIRES\nME";
 
     @Test

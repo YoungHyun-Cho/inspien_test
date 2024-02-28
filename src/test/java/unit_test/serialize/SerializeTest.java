@@ -1,14 +1,12 @@
 package unit_test.serialize;
 
-import org.inspien.client.RestApiClient;
-import org.inspien.dto.record.Records;
-import org.inspien.dto.response.Response;
-import org.inspien.file.FileHandler;
-import org.inspien.mapper.Mapper;
+import org.inspien.client.api.JavaApiClient;
+import org.inspien.data.json.ParsedJsonData;
+import org.inspien.data.api.Response;
+import org.inspien.util.FileHandler;
+import org.inspien.util.Mapper;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public class SerializeTest {
@@ -18,7 +16,7 @@ public class SerializeTest {
     @Test
     public void serializeRecordTest() throws IOException {
 
-        RestApiClient restApiClient = new RestApiClient();
+        JavaApiClient javaApiClient = new JavaApiClient();
 
         String input =
                 "{" +
@@ -29,13 +27,13 @@ public class SerializeTest {
         String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
 
         // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
-        Response response = Mapper.strToResponse(restApiClient.requestDataAndConnInfo(input, url));
+        Response response = Mapper.mapToResponse(javaApiClient.sendApiRequest(input, url));
 
         // JSON_DATA를 Java Object로 변환
-        Records records = Mapper.jsonStringToObject(response.getJsonData());
+        ParsedJsonData parsedJsonData = Mapper.jsonDataToObject(response.getJsonData());
 
         StringBuilder stringBuilder = new StringBuilder();
-        records.getRecords().stream()
+        parsedJsonData.getRecords().stream()
                 .forEach(record -> stringBuilder.append(record.serialize()));
 
         FileHandler.write(PATH + FILE_NAME, stringBuilder.toString());
