@@ -1,4 +1,4 @@
-package org.inspien.parser;
+package org.inspien.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.inspien.dto.order.Item;
 import org.inspien.dto.order.Order;
 import org.inspien.dto.order.SalesStatus;
+import org.inspien.dto.record.Records;
 import org.inspien.dto.response.Response;
 import org.inspien.type.CharSet;
 import org.w3c.dom.Document;
@@ -19,28 +20,22 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
 public class Mapper {
-    private static final String PATH = "/Users/0hyuncho/Desktop/inspien_code_temp_test";
 
-    // 추후 Java Object를 리턴하도록 수정 필요
-    public static void jsonStringToObject(String base64EncodedString) throws UnsupportedEncodingException, JsonProcessingException {
-        String decodedStr = decode(base64EncodedString, CharSet.UTF_8);
-
-        // 내용 확인용
-        System.out.println(decodedStr);
-
-//        Response responseDto = objectMapper.readValue(decodedStr, new TypeReference<Response>() {});
+    public static Records jsonStringToObject(String base64EncodedString) throws UnsupportedEncodingException, JsonProcessingException {
+        String decodedJson = decode(base64EncodedString, CharSet.UTF_8);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(decodedJson, Records.class);
     }
 
     public static SalesStatus xmlStringToObject(String base64EncodedString) throws ParserConfigurationException, SAXException, IOException {
-        String decodedStr = decode(base64EncodedString, CharSet.EUC_KR);
-        Document document = parse(decodedStr);
+        String decodedXml = decode(base64EncodedString, CharSet.EUC_KR);
+        Document document = parse(decodedXml);
         List<Order> orders = extractOrders(document);
         List<Item> items = extractItems(document);
         SalesStatus salesStatus = new SalesStatus(orders, items);
@@ -56,7 +51,6 @@ public class Mapper {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         ByteArrayInputStream input = new ByteArrayInputStream(decodedStr.getBytes("UTF-8"));
-
         return builder.parse(input);
     }
 

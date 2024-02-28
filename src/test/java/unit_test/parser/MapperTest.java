@@ -1,8 +1,7 @@
 package unit_test.parser;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.inspien.parser.Mapper;
-import org.inspien.type.FileType;
+import org.inspien.mapper.Mapper;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 

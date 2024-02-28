@@ -6,7 +6,7 @@ import org.inspien.connection.database.LocalOracleJdbcConnection;
 import org.inspien.dto.order.SalesStatus;
 import org.inspien.dto.response.DBConnInfo;
 import org.inspien.dto.response.Response;
-import org.inspien.parser.Mapper;
+import org.inspien.mapper.Mapper;
 import org.inspien.service.TestService;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;

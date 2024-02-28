@@ -13,7 +13,7 @@ public class FTPConnInfo {
     private String host;
 
     @JsonProperty("PORT")
-    private int port;
+    private Integer port;
 
     @JsonProperty("USER")
     private String user;
@@ -23,4 +23,15 @@ public class FTPConnInfo {
 
     @JsonProperty("FILE_PATH")
     private String filePath;
+
+    @Override
+    public String toString() {
+        return "FTPConnInfo{" +
+                "host='" + host + '\'' +
+                ", port=" + port +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", filePath='" + filePath + '\'' +
+        '}';
+    }
 }

@@ -64,9 +64,4 @@ public class RestApiClient implements Client {
 
         return buffer.toString();
     }
-
-    @Override
-    public void insertData(SalesStatus salesStatus) {
-
-    }
 }

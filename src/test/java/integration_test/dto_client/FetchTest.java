@@ -1,12 +1,9 @@
 package integration_test.dto_client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.inspien.client.RestApiClient;
-import org.inspien.dto.order.SalesStatus;
 import org.inspien.dto.response.Response;
-import org.inspien.parser.Mapper;
+import org.inspien.mapper.Mapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

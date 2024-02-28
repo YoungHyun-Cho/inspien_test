@@ -4,8 +4,9 @@ import org.inspien.client.RestApiClient;
 import org.inspien.dto.order.Item;
 import org.inspien.dto.order.Order;
 import org.inspien.dto.order.SalesStatus;
+import org.inspien.dto.record.Records;
 import org.inspien.dto.response.Response;
-import org.inspien.parser.Mapper;
+import org.inspien.mapper.Mapper;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -56,13 +57,27 @@ public class FetchAndParseTest {
         assertThat(firstItem.getQuantity()).isEqualTo(1);
         assertThat(firstItem.getName()).isEqualTo("아이폰케이스");
         assertThat(firstItem.getColor()).isEqualTo("흰색");
+    }
 
-        // 일단 Connection Info부터 확인해보자.
-        System.out.println("HOST       : " + response.getDbConnInfo().getHost());
-        System.out.println("USER       : " + response.getDbConnInfo().getUser());
-        System.out.println("SID        : " + response.getDbConnInfo().getSid());
-        System.out.println("PASSWORD   : " + response.getDbConnInfo().getPassword());
-        System.out.println("TABLE_NAME : " + response.getDbConnInfo().getTableName());
-        System.out.println("PORT       : " + response.getDbConnInfo().getPort());
+    @Test
+    public void fetchJsonAndParse() throws ParserConfigurationException, SAXException, IOException {
+        RestApiClient restApiClient = new RestApiClient();
+
+        String input =
+                "{" +
+                        "\"NAME\" : \"조영현\"," +
+                        "\"PHONE_NUMBER\" : \"010-9512-8646\"," +
+                        "\"E_MAIL\" : \"psyhyun1030@gmail.com\"" +
+                        "}";
+        String url = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
+
+        // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
+        Response response = Mapper.strToResponse(restApiClient.requestDataAndConnInfo(input, url));
+
+        // JSON_DATA를 Java Object로 변환
+        Records records = Mapper.jsonStringToObject(response.getJsonData());
+
+//        System.out.println(records);
+        System.out.println(response.getFtpConnInfo());
     }
 }
