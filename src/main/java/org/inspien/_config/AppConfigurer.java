@@ -9,6 +9,11 @@ import org.inspien.client.ftp.FtpClient;
 import org.inspien.data.api.DbConnInfo;
 import org.inspien.data.api.UserInfo;
 
+/*
+* # AppConfigurer.class
+*   - 애플리케이션의 상수값을 설정하고, 객체를 생성 및 의존 관계를 설정한다.
+* */
+
 public class AppConfigurer {
 
     @Getter
@@ -26,18 +31,26 @@ public class AppConfigurer {
             "XE", "ORDERS"
     );
 
+    // 사용할 API Client의 구현체를 선택할 수 있다.
+    // InspienCodingTest가 의존할 ApiClient를 결정하고 생성한다.
     public static ApiClient client() {
         return new ApacheApiClient();
     }
 
+    // LocalOracleDbmsClient의 인스턴스를 생성한다.
+    // 객체를 선택할 필요는 없지만 일관성을 위해 AppConfigurer에서 객체를 생성하도록 하였다.
     public static LocalOracleDbmsClient localOracleDbmsClient() {
         return new LocalOracleDbmsClient();
     }
 
+    // RemoteOracleDbmsClient의 인스턴스를 생성한다.
+    // 객체를 선택할 필요는 없지만 일관성을 위해 AppConfigurer에서 객체를 생성하도록 하였다.
     public static RemoteOracleDbmsClient remoteOracleDbmsClient() {
         return new RemoteOracleDbmsClient();
     }
 
+    // FtpClient의 인스턴스를 생성한다.
+    // 객체를 선택할 필요는 없지만 일관성을 위해 AppConfigurer에서 객체를 생성하도록 하였다.
     public static FtpClient ftpClient() {
         return new FtpClient();
     }

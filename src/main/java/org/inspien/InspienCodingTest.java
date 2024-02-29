@@ -24,6 +24,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+* # InspienCodingTest.class
+*   - 애플리케이션 실행 흐름을 담당함.
+*   - 각 Client들과 의존 관계를 형성함.
+* */
+
 @RequiredArgsConstructor
 public class InspienCodingTest {
 
@@ -58,13 +64,14 @@ public class InspienCodingTest {
     // 과제 구현 사항 3️⃣
     // Order와 Item의 데이터를 조인하여 INSPIEN ORACLE DBMS에 삽입한다.
     private void insertToRemoteDb(Response response) throws IOException, ParserConfigurationException, SAXException, SQLException, ClassNotFoundException {
-        localOracleDbmsClient.setDbConnInfo(AppConfigurer.getLocalDbConnInfo());
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
         insertToLocalDb(Mapper.xmlDataToObject(response.getXmlData()));
         ArrayList<HashMap<String, String>> joined = joinInLocalDb();
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
-        remoteOracleDbmsClient.createJoinedData(joined);
+        printMyDataSize(true);
+        remoteOracleDbmsClient.createData(joined);
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT SUCCESS");
+        printMyDataSize(false);
     }
 
     // 과제 구현 사항 4️⃣
@@ -82,22 +89,22 @@ public class InspienCodingTest {
         for (Order order : parsedXmlData.getOrders()) {
             localOracleDbmsClient.createOrder(order);
         }
-        System.out.println("    ORDER INSERTED");
+        System.out.println("   ORDER INSERTED");
         for (Item item : parsedXmlData.getItems()) {
             localOracleDbmsClient.createItem(item);
         }
-        System.out.println("    ITEM INSERTED");
+        System.out.println("   ITEM INSERTED");
         System.out.println("✅ LOCAL ORACLE DBMS : INSERT SUCCESS");
     }
 
     // Local ORACLE DBMS에서 Order와 Item의 데이터를 조인하여 조회한 데이터를 컬렉션에 담아 리턴한다.
     private ArrayList<HashMap<String, String>> joinInLocalDb() throws SQLException, ClassNotFoundException {
         System.out.println("✅ LOCAL ORACLE DBMS : JOIN START");
-        HashMap<String, String> data = new HashMap<>();
-        data.put("tableName", "ORDERS");
-        data.put("naturalJoin", "ITEM");
-        data.put("columns", "*");
-        ArrayList<HashMap<String, String>> joined = localOracleDbmsClient.findOrderItem(data);
+        HashMap<String, String> sqlComponent = new HashMap<>();
+        sqlComponent.put("tableName", "ORDERS");
+        sqlComponent.put("naturalJoin", "ITEM");
+        sqlComponent.put("columns", "*");
+        ArrayList<HashMap<String, String>> joined = localOracleDbmsClient.findDataBy(sqlComponent);
         System.out.println("✅ LOCAL ORACLE DBMS : JOIN SUCCESS");
         return joined;
     }
@@ -107,7 +114,6 @@ public class InspienCodingTest {
         System.out.println("✅ JSON_DATA : PROCESSING START");
         ParsedJsonData parsedJsonData = Mapper.jsonDataToObject(jsonData);
 
-        // 구분자와 개행자 추가
         StringBuilder stringBuilder = new StringBuilder();
         parsedJsonData.getRecords().stream()
                 .forEach(record -> stringBuilder.append(record.serialize()));
@@ -121,5 +127,15 @@ public class InspienCodingTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedDateTime = now.format(formatter);
         return "INSPIEN_JSON_CHOYOUNGHYUN_" + formattedDateTime + ".txt";
+    }
+
+    // 인스피언의 ORACLE DBMS에 삽입된 나의 데이터의 개수를 계수한다.
+    private void printMyDataSize(boolean isBefore) throws SQLException, ClassNotFoundException {
+        HashMap<String, String> sqlComponent = new HashMap<>();
+        sqlComponent.put("tableName", "INSPIEN_XMLDATA_INFO");
+        sqlComponent.put("columns", "*");
+        sqlComponent.put("where", "SENDER = \'조영현\'");
+        ArrayList<HashMap<String, String>> result = remoteOracleDbmsClient.findDataBy(sqlComponent);
+        System.out.println((isBefore ? "   BEFORE " : "   AFTER ") + "INSERT : " + result.size());
     }
 }

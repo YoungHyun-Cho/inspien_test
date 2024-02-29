@@ -1,42 +1,40 @@
 package org.inspien.client.dbms;
 
+import org.inspien._config.AppConfigurer;
 import org.inspien.data.xml.Item;
 import org.inspien.data.xml.Order;
 import org.inspien.data.api.DbConnInfo;
-import org.inspien.exception.DbConnInfoNotExistException;
 import org.inspien.util.SqlGenerator;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+* # LocalOracleDbmsClient.class
+*   - 로컬 ORACLE DBMS과 소통하며 데이터를 삽입 및 조회함.
+* */
+
 public class LocalOracleDbmsClient extends DbmsClient {
 
-    private DbConnInfo dbConnInfo = null;
+    private DbConnInfo dbConnInfo = AppConfigurer.getLocalDbConnInfo();
 
-    public void setDbConnInfo(DbConnInfo dbConnInfo) {
-        this.dbConnInfo = dbConnInfo;
-    }
-
-    private void checkDbConnInfo() {
-        if (dbConnInfo == null) throw new DbConnInfoNotExistException();
-    }
-
+    // Order 테이블에 데이터를 삽입한다.
     public Integer createOrder(Order order) throws SQLException, ClassNotFoundException {
-        checkDbConnInfo();
         return super.save(dbConnInfo, order.toHashMap());
     }
 
+    // Item 테이블에 데이터를 삽입한다.
     public Integer createItem(Item item) throws SQLException, ClassNotFoundException {
-        checkDbConnInfo();
         return super.save(dbConnInfo, item.toHashMap());
     }
 
-    public ArrayList<HashMap<String, String>> findOrderItem(HashMap<String, String> data) throws SQLException, ClassNotFoundException {
-        checkDbConnInfo();
-        return find(SqlGenerator.select(data));
+    // Order, Item, 또는 Order와 Item을 조인하여 조회한다.
+    public ArrayList<HashMap<String, String>> findDataBy(HashMap<String, String> sqlComponent) throws SQLException, ClassNotFoundException {
+        return find(SqlGenerator.select(sqlComponent));
     }
 
+    // 로컬 ORACLE DBMS에 접근하여 SELECT문을 실행한다.
     private ArrayList<HashMap<String, String>> find(String query) throws ClassNotFoundException, SQLException {
         Connection connection = connect(dbConnInfo);
 

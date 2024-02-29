@@ -8,14 +8,11 @@ import org.inspien.data.api.Response;
 import org.inspien.util.Mapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import static org.assertj.core.api.Assertions.*;
 
 public class RemoteDbTest {
     private static final ApiClient apiClient = new ApacheApiClient();
@@ -34,11 +31,11 @@ public class RemoteDbTest {
 
     @Test
     public void fetchMyData() throws ClassNotFoundException, SQLException {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("tableName", "INSPIEN_XMLDATA_INFO");
-        data.put("columns", "*");
-        data.put("where", "SENDER = \'조영현\'");
-        ArrayList<HashMap<String, String>> result = remoteOracleDbmsClient.findInsertedData(data);
+        HashMap<String, String> sqlComponent = new HashMap<>();
+        sqlComponent.put("tableName", "INSPIEN_XMLDATA_INFO");
+        sqlComponent.put("columns", "*");
+        sqlComponent.put("where", "SENDER = \'조영현\'");
+        ArrayList<HashMap<String, String>> result = remoteOracleDbmsClient.findDataBy(sqlComponent);
 
         System.out.println(result);
         System.out.println("COUNT : " + result.size());

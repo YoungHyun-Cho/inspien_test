@@ -10,13 +10,13 @@ import static org.assertj.core.api.Assertions.*;
 public class SqlGeneratorTest {
     @Test
     public void selectTest() {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("tableName", "ORDERS");
-        data.put("naturalJoin", "ITEM");
-        data.put("columns", "*");
-        data.put("orderBy", "ORDER_NUM");
+        HashMap<String, String> sqlComponent = new HashMap<>();
+        sqlComponent.put("tableName", "ORDERS");
+        sqlComponent.put("naturalJoin", "ITEM");
+        sqlComponent.put("columns", "*");
+        sqlComponent.put("orderBy", "ORDER_NUM");
 
-        String query = SqlGenerator.select(data);
+        String query = SqlGenerator.select(sqlComponent);
 
         assertThat(query).isEqualTo("SELECT * FROM ORDERS NATURAL JOIN ITEM ORDER BY ORDER_NUM");
     }

@@ -6,11 +6,9 @@ import org.inspien.client.api.ApiClient;
 import org.inspien.client.dbms.LocalOracleDbmsClient;
 import org.inspien.client.dbms.RemoteOracleDbmsClient;
 import org.inspien.data.xml.Item;
-import org.inspien.data.xml.Order;
 import org.inspien.data.xml.ParsedXmlData;
 import org.inspien.data.api.Response;
 import org.inspien.util.Mapper;
-import org.inspien.util.SqlGenerator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -31,14 +29,12 @@ public class LocalDbTest extends LocalOracleDbmsClient {
 
     @BeforeAll
     public static void initiateData() throws IOException, ParserConfigurationException, SAXException {
-        // 인스피언 서버로 요청 전송 후, 수신한 응답을 Java Object로 변환
         Response response = Mapper.mapToResponse(
                 apiClient.sendApiRequest(
                         AppConfigurer.getUserInfo().serialize(),
                         AppConfigurer.getAPI_URL()
                 )
         );
-        localOracleDbmsClient.setDbConnInfo(AppConfigurer.getLocalDbConnInfo());
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
         parsedXmlData = Mapper.xmlDataToObject(response.getXmlData());
     }
@@ -51,7 +47,7 @@ public class LocalDbTest extends LocalOracleDbmsClient {
         data.put("where", "ORDER_NUM=1000 AND ORDER_QTY=3");
         data.put("orderBy", "ORDER_NUM");
 
-        HashMap<String, String> orderItem = localOracleDbmsClient.findOrderItem(data).get(0);
+        HashMap<String, String> orderItem = localOracleDbmsClient.findDataBy(data).get(0);
 
         assertThat(orderItem.get("RECEIVER_NO")).isEqualTo("010-5312-2345");
         assertThat(orderItem.get("ORDER_ID")).isEqualTo("kwang001");

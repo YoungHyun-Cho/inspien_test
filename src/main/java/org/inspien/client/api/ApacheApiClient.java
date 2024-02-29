@@ -9,7 +9,14 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
+/*
+* # ApacheApiClient.class
+*   - 아파치를 사용하여 API 요청을 전송하고, 응답을 수신한다.
+* */
+
 public class ApacheApiClient implements ApiClient {
+
+    // 인스피언의 API 서버로 요청을 보내고, 응답을 문자열로 변환하여 리턴한다.
     @Override
     public String sendApiRequest(String data, String apiUrl) throws IOException {
         HttpClient httpClient = HttpClients.createDefault();

@@ -3,6 +3,7 @@ package inspien.client;
 import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApacheApiClient;
 import org.inspien.client.api.ApiClient;
+import org.inspien.client.api.JavaApiClient;
 import org.inspien.data.api.Response;
 import org.inspien.util.Mapper;
 import org.junit.jupiter.api.DisplayName;

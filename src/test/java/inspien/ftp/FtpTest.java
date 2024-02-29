@@ -38,6 +38,7 @@ public class FtpTest {
         apacheFtpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
         apacheFtpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
         apacheFtpClient.enterLocalPassiveMode();
+
         FTPFile[] files = apacheFtpClient.listFiles();
         for (FTPFile file : files) {
             if (file.getName().equals(FILE_NAME)) System.out.println("🟥 FILE_NAME : " + file.getName());
