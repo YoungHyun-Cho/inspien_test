@@ -55,20 +55,20 @@ public class RemoteOracleDbmsClient extends DbmsClient {
 
         ResultSetMetaData metaData = resultSet.getMetaData();
         int columnsNumber = metaData.getColumnCount();
-        ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         while (resultSet.next()) {
-            HashMap<String, String> hashMap = new HashMap<>();
+            HashMap<String, String> data = new HashMap<>();
             for (int i = 1; i <= columnsNumber; i++) {
-                hashMap.put(metaData.getColumnName(i), resultSet.getString(i));
+                data.put(metaData.getColumnName(i), resultSet.getString(i));
             }
-            arrayList.add(hashMap);
+            result.add(data);
         }
 
         resultSet.close();
         statement.close();
         connection.close();
 
-        return arrayList;
+        return result;
     }
 }
