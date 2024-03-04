@@ -3,6 +3,7 @@ package org.inspien.data.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /*
 * # Record.class
@@ -11,6 +12,7 @@ import lombok.Setter;
 * */
 
 @Getter
+@ToString
 public class Record {
     @JsonProperty("Names")
     private String name;
@@ -72,25 +74,5 @@ public class Record {
                 .append(creditCard).append("^")
                 .append(guid).append("\n")
                 .toString();
-    }
-
-    @Override
-    public String toString() {
-        return "Record{" +
-                "name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", company='" + company + '\'' +
-                ", personalNumber='" + personalNumber + '\'' +
-                ", organizationNumber='" + organizationNumber + '\'' +
-                ", country='" + country + '\'' +
-                ", region='" + region + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", creditCard='" + creditCard + '\'' +
-                ", guid='" + guid + '\'' +
-        '}';
     }
 }

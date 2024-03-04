@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApiClient;
 import org.inspien.client.dbms.RemoteOracleDbmsClient;
-import org.inspien.client.dbms.LocalOracleDbmsClient;
 import org.inspien.client.ftp.FtpClient;
-import org.inspien.data.xml.Item;
-import org.inspien.data.xml.Order;
 import org.inspien.data.xml.ParsedXmlData;
 import org.inspien.data.json.ParsedJsonData;
 import org.inspien.data.api.Response;
+import org.inspien.handler.XmlDataHandler;
 import org.inspien.util.Mapper;
 import org.xml.sax.SAXException;
 
@@ -34,7 +32,6 @@ import java.util.HashMap;
 public class InspienCodingTest {
 
     private final ApiClient apiClient;
-    private final LocalOracleDbmsClient localOracleDbmsClient;
     private final RemoteOracleDbmsClient remoteOracleDbmsClient;
     private final FtpClient ftpClient;
 
@@ -65,8 +62,8 @@ public class InspienCodingTest {
     // Order와 Item의 데이터를 조인하여 INSPIEN ORACLE DBMS에 삽입한다.
     private void insertToRemoteDb(Response response) throws IOException, ParserConfigurationException, SAXException, SQLException, ClassNotFoundException {
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
-        insertToLocalDb(Mapper.xmlDataToObject(response.getXmlData()));
-        ArrayList<HashMap<String, String>> joined = joinInLocalDb();
+        ParsedXmlData parsedXmlData = Mapper.xmlDataToObject(response.getXmlData());
+        ArrayList<HashMap<String, String>> joined = XmlDataHandler.join(parsedXmlData.getOrders(), parsedXmlData.getItems());
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
         printMyDataSize(true);
         remoteOracleDbmsClient.createData(joined);
@@ -81,32 +78,6 @@ public class InspienCodingTest {
         String content = handleJsonData(response.getJsonData());
         String fileName = composeFileName();
         ftpClient.upload(fileName, content);
-    }
-
-    // Local ORACLE DBMS에 Order와 Item의 데이터를 저장한다.
-    private void insertToLocalDb(ParsedXmlData parsedXmlData) throws SQLException, ClassNotFoundException {
-        System.out.println("✅ LOCAL ORACLE DBMS : INSERT START");
-        for (Order order : parsedXmlData.getOrders()) {
-            localOracleDbmsClient.createOrder(order);
-        }
-        System.out.println("   ORDER INSERTED");
-        for (Item item : parsedXmlData.getItems()) {
-            localOracleDbmsClient.createItem(item);
-        }
-        System.out.println("   ITEM INSERTED");
-        System.out.println("✅ LOCAL ORACLE DBMS : INSERT SUCCESS");
-    }
-
-    // Local ORACLE DBMS에서 Order와 Item의 데이터를 조인하여 조회한 데이터를 컬렉션에 담아 리턴한다.
-    private ArrayList<HashMap<String, String>> joinInLocalDb() throws SQLException, ClassNotFoundException {
-        System.out.println("✅ LOCAL ORACLE DBMS : JOIN START");
-        HashMap<String, String> sqlComponent = new HashMap<>();
-        sqlComponent.put("tableName", "ORDERS");
-        sqlComponent.put("naturalJoin", "ITEM");
-        sqlComponent.put("columns", "*");
-        ArrayList<HashMap<String, String>> joined = localOracleDbmsClient.findDataBy(sqlComponent);
-        System.out.println("✅ LOCAL ORACLE DBMS : JOIN SUCCESS");
-        return joined;
     }
 
     // JSON 문자열을 입력 받아 과제가 구분자(^)와 개행(\n)을 적절히 추가하여 리턴한다.

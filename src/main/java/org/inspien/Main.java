@@ -13,7 +13,6 @@ public class Main {
         // AppConfigurer부터 의존 객체를 주입 받는다.
         InspienCodingTest inspienCodingTest = new InspienCodingTest(
                 AppConfigurer.client(),
-                AppConfigurer.localOracleDbmsClient(),
                 AppConfigurer.remoteOracleDbmsClient(),
                 AppConfigurer.ftpClient()
         );

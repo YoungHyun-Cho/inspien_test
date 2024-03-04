@@ -13,7 +13,7 @@ import java.util.HashMap;
 *   - 인스피언의 ORACLE DBMS과 소통하며 데이터를 삽입 및 조회함.
 * */
 
-public class RemoteOracleDbmsClient extends DbmsClient {
+public class RemoteOracleDbmsClient {
 
     private DbConnInfo dbConnInfo = null;
 
@@ -42,13 +42,13 @@ public class RemoteOracleDbmsClient extends DbmsClient {
             row.put("tableName", "INSPIEN_XMLDATA_INFO");
             row.put("SENDER", "조영현");
             row.put("CURRENT_DT", "SYSDATE");
-            super.save(dbConnInfo, row);
+            save(row);
         }
     }
 
     // 인스피언의 ORACLE DBMS에 접근하여 SELECT문을 실행한다.
     private ArrayList<HashMap<String, String>> find(String query) throws ClassNotFoundException, SQLException {
-        Connection connection = connect(dbConnInfo);
+        Connection connection = connect();
 
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
@@ -70,5 +70,25 @@ public class RemoteOracleDbmsClient extends DbmsClient {
         connection.close();
 
         return result;
+    }
+
+    // 데이터와 DbConnInfo를 입력 받아, DbConnInfo가 가리키는 DBMS에 접근항려 데이터를 삽입한다.
+    private Integer save(HashMap<String, String> data) throws ClassNotFoundException, SQLException {
+        Connection connection = connect();
+        Statement statement = connection.createStatement();
+        String query = SqlGenerator.insert(data);
+        int affectedRows = statement.executeUpdate(query);
+
+        statement.close();
+        connection.close();
+
+        return affectedRows;
+    }
+
+    // DB 커넥션을 생성한다.
+    private Connection connect() throws ClassNotFoundException, SQLException {
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        String url = "jdbc:oracle:thin:@" + dbConnInfo.getHost() + ":" + dbConnInfo.getPort() + ":" + dbConnInfo.getSid();
+        return DriverManager.getConnection(url, dbConnInfo.getUser(), dbConnInfo.getPassword());
     }
 }

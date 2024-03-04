@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /*
 * # FtpConnInfo.class
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 * */
 
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class FtpConnInfo {
@@ -28,15 +30,4 @@ public class FtpConnInfo {
 
     @JsonProperty("FILE_PATH")
     private String filePath;
-
-    @Override
-    public String toString() {
-        return "FTPConnInfo{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                ", user='" + user + '\'' +
-                ", password='" + password + '\'' +
-                ", filePath='" + filePath + '\'' +
-        '}';
-    }
 }

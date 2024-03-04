@@ -2,6 +2,7 @@ package org.inspien.data.xml;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashMap;
 
@@ -12,6 +13,7 @@ import java.util.HashMap;
 
 @Getter
 @Setter
+@ToString
 public class Order {
     private String userId;        // ORDER_ID
     private String number;        // ORDER_NUM
@@ -23,37 +25,4 @@ public class Order {
     private String receiverPhone; // RECEIVER_NO
     private String destination;   // DESTINATION
     private String message;       // DESCIPTION
-
-    // SQL 생성을 위한 해시맵 변환 코드
-    public HashMap<String, String> toHashMap() {
-        HashMap<String, String> hashMap = new HashMap();
-        hashMap.put("tableName", "ORDERS");
-        hashMap.put("ORDER_NUM", number);
-        hashMap.put("ORDER_ID", userId);
-        hashMap.put("ORDER_DATE", date);
-        hashMap.put("ORDER_PRICE", price);
-        hashMap.put("ORDER_QTY", quantity);
-        hashMap.put("RECEIVER_NAME", receiverName);
-        hashMap.put("RECEIVER_NO", receiverPhone);
-        hashMap.put("ETA_DATE", etaDate);
-        hashMap.put("DESTINATION", destination);
-        hashMap.put("DESCIPTION", message);
-        return hashMap;
-    }
-
-    @Override
-    public String toString() {
-        return "Order {" +
-                "userId='" + userId + '\'' +
-                ", number=" + number +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", date=" + date +
-                ", etaDate=" + etaDate +
-                ", receiverName='" + receiverName + '\'' +
-                ", receiverPhone='" + receiverPhone + '\'' +
-                ", destination='" + destination + '\'' +
-                ", message='" + message + '\'' +
-        '}';
-    }
 }
