@@ -1,21 +1,17 @@
 package org.inspien;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApiClient;
 import org.inspien.client.dbms.RemoteOracleDbmsClient;
 import org.inspien.client.ftp.FtpClient;
 import org.inspien.data.xml.ParsedXmlData;
-import org.inspien.data.json.ParsedJsonData;
 import org.inspien.data.api.Response;
-import org.inspien.handler.XmlDataHandler;
 import org.inspien.util.Mapper;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,11 +55,10 @@ public class InspienCodingTest {
     }
 
     // 과제 구현 사항 3️⃣
-    // Order와 Item의 데이터를 조인하여 INSPIEN ORACLE DBMS에 삽입한다.
+    // Order와 Item의 데이터를 핸들링하여 INSPIEN ORACLE DBMS에 삽입한다.
     private void insertToRemoteDb(Response response) throws IOException, ParserConfigurationException, SAXException, SQLException, ClassNotFoundException {
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
-        ParsedXmlData parsedXmlData = Mapper.xmlDataToObject(response.getXmlData());
-        ArrayList<HashMap<String, String>> joined = XmlDataHandler.join(parsedXmlData.getOrders(), parsedXmlData.getItems());
+        ArrayList<HashMap<String, String>> joined = Mapper.xmlDataToObject(response.getXmlData()).handle();
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
         printMyDataSize(true);
         remoteOracleDbmsClient.createData(joined);
@@ -72,24 +67,12 @@ public class InspienCodingTest {
     }
 
     // 과제 구현 사항 4️⃣
-    // INSPIEN FTP SERVER에 JSON_DATA를 가공하여 업로드한다.
+    // INSPIEN FTP SERVER에 JSON_DATA를 핸들링하여 업로드한다.
     private void uploadToFtpServer(Response response) throws IOException {
         ftpClient.setFtpConnInfo(response.getFtpConnInfo());
-        String content = handleJsonData(response.getJsonData());
+        String content = Mapper.jsonDataToObject(response.getJsonData()).handle();
         String fileName = composeFileName();
         ftpClient.upload(fileName, content);
-    }
-
-    // JSON 문자열을 입력 받아 과제가 구분자(^)와 개행(\n)을 적절히 추가하여 리턴한다.
-    private static String handleJsonData(String jsonData) throws JsonProcessingException , UnsupportedEncodingException {
-        System.out.println("✅ JSON_DATA : PROCESSING START");
-        ParsedJsonData parsedJsonData = Mapper.jsonDataToObject(jsonData);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        parsedJsonData.getRecords().stream()
-                .forEach(record -> stringBuilder.append(record.serialize()));
-        System.out.println("✅ JSON_DATA : PROCESSING SUCCESS");
-        return stringBuilder.toString();
     }
 
     // 파일의 이름을 'INSPIEN_JSON_이름_YYYYMMDDHHMMSS' 형식으로 구성한다.

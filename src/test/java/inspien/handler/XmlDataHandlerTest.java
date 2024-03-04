@@ -4,9 +4,7 @@ import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApacheApiClient;
 import org.inspien.client.api.ApiClient;
 import org.inspien.data.api.Response;
-import org.inspien.data.xml.Order;
 import org.inspien.data.xml.ParsedXmlData;
-import org.inspien.handler.XmlDataHandler;
 import org.inspien.util.Mapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class XmlDataHandlerTest {
     private static final ApiClient apiClient = new ApacheApiClient();
-    private static final XmlDataHandler xmlDataHandler = new XmlDataHandler();
     private static ParsedXmlData parsedXmlData;
 
     @BeforeAll
@@ -37,9 +34,7 @@ public class XmlDataHandlerTest {
 
     @Test
     public void xmlDataJoinTest() {
-        ArrayList<HashMap<String, String>> joined = xmlDataHandler.join(
-                parsedXmlData.getOrders(), parsedXmlData.getItems()
-        );
+        ArrayList<HashMap<String, String>> joined = parsedXmlData.handle();
 
         assertThat(joined.size()).isEqualTo(50);
 

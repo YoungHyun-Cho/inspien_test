@@ -17,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public class FtpTest {
-    private static final String FILE_NAME = "INSPIEN_JSON_CHOYOUNGHYUN_20240228215012.txt";
     private static final ApiClient apiClient = new ApacheApiClient();
     private static FtpConnInfo ftpConnInfo;
 
@@ -41,7 +40,7 @@ public class FtpTest {
 
         FTPFile[] files = apacheFtpClient.listFiles();
         for (FTPFile file : files) {
-            if (file.getName().equals(FILE_NAME)) System.out.println("🟥 FILE_NAME : " + file.getName());
+            if (file.getName().contains("CHOYOUNGHYUN")) System.out.println(file.getName());
         }
     }
 }
