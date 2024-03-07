@@ -10,14 +10,11 @@ import org.inspien.data.api.FtpConnInfo;
 import org.inspien.data.api.Response;
 import org.inspien.util.Mapper;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
-public class FtpTest {
+public class FtpClientTest {
     private static final ApiClient apiClient = new ApacheApiClient();
     private static FtpConnInfo ftpConnInfo;
 

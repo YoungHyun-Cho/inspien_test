@@ -3,7 +3,7 @@ package org.inspien._config;
 import lombok.Getter;
 import org.inspien.client.api.ApacheApiClient;
 import org.inspien.client.api.ApiClient;
-import org.inspien.client.dbms.RemoteOracleDbmsClient;
+import org.inspien.client.dbms.OracleDbmsClient;
 import org.inspien.client.ftp.FtpClient;
 import org.inspien.data.api.UserInfo;
 
@@ -33,8 +33,8 @@ public class AppConfigurer {
 
     // RemoteOracleDbmsClient의 인스턴스를 생성한다.
     // 객체를 선택할 필요는 없지만 일관성을 위해 AppConfigurer에서 객체를 생성하도록 하였다.
-    public static RemoteOracleDbmsClient remoteOracleDbmsClient() {
-        return new RemoteOracleDbmsClient();
+    public static OracleDbmsClient remoteOracleDbmsClient() {
+        return new OracleDbmsClient();
     }
 
     // FtpClient의 인스턴스를 생성한다.

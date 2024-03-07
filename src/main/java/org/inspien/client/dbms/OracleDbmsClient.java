@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
-* # RemoteOracleDbmsClient.class
+* # OracleDbmsClient.class
 *   - 인스피언의 ORACLE DBMS과 소통하며 데이터를 삽입 및 조회함.
 * */
 
-public class RemoteOracleDbmsClient {
+public class OracleDbmsClient {
 
     private DbConnInfo dbConnInfo = null;
 

@@ -3,7 +3,7 @@ package org.inspien;
 import lombok.RequiredArgsConstructor;
 import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApiClient;
-import org.inspien.client.dbms.RemoteOracleDbmsClient;
+import org.inspien.client.dbms.OracleDbmsClient;
 import org.inspien.client.ftp.FtpClient;
 import org.inspien.data.api.Response;
 import org.inspien.util.FileHandler;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class InspienCodingTest {
 
     private final ApiClient apiClient;
-    private final RemoteOracleDbmsClient remoteOracleDbmsClient;
+    private final OracleDbmsClient oracleDbmsClient;
     private final FtpClient ftpClient;
 
     public void run() {
@@ -57,9 +57,9 @@ public class InspienCodingTest {
     // 과제 구현 사항 3️⃣
     // Order와 Item의 데이터를 핸들링하여 INSPIEN ORACLE DBMS에 삽입한다.
     private void insertToRemoteDb(Response response) throws IOException, ParserConfigurationException, SAXException, SQLException, ClassNotFoundException {
-        remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
+        oracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
         ArrayList<HashMap<String, String>> joined = Mapper.xmlDataToObject(response.getXmlData()).handle();
-        remoteOracleDbmsClient.createData(joined);
+        oracleDbmsClient.createData(joined);
     }
 
     // 과제 구현 사항 4️⃣
