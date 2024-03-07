@@ -28,7 +28,6 @@ public class RemoteDbTest {
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
     }
 
-
     @Test
     public void fetchMyData() throws ClassNotFoundException, SQLException {
         HashMap<String, String> sqlComponent = new HashMap<>();

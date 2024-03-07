@@ -37,7 +37,6 @@ public class FtpClient {
 
         FTPClient ftpClient = new FTPClient();
         connect(ftpClient);
-        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
         InputStream inputStream = new ByteArrayInputStream(fileData.getBytes());
         boolean done = ftpClient.storeFile(ftpConnInfo.getFilePath() + fileName, inputStream);
@@ -51,7 +50,6 @@ public class FtpClient {
         ftpClient.logout();
 
         if (ftpClient.isConnected()) ftpClient.disconnect();
-
     }
 
     // FTP Server로부터 파일을 다운로드하고, 실행 결과와 파일 목록을 출력한다.
@@ -68,7 +66,6 @@ public class FtpClient {
         else System.out.println("❌ INSPIEN FTP SERVER : DOWNLOAD FAIL");
 
         printReplyInfo(ftpClient);
-        printMyFileList(ftpClient, remoteFileName);
 
         outputStream.close();
     }
@@ -78,6 +75,7 @@ public class FtpClient {
         ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
         ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
         ftpClient.enterLocalPassiveMode();
+        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
     }
 
     // 업로드 및 다운로드 실행의 결과 정보를 출력한다.

@@ -18,6 +18,9 @@ public class AppConfigurer {
     private static final String API_URL = "http://211.106.171.36:50000/RESTAdapter/RecruitingTest";
 
     @Getter
+    private static final String FILE_PATH = "/Users/0hyuncho/Desktop/Inspien";
+
+    @Getter
     private static final UserInfo userInfo = new UserInfo(
             "조영현", "010-9512-8646", "psyhyun1030@gmail.com"
     );

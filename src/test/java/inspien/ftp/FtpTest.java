@@ -10,6 +10,7 @@ import org.inspien.data.api.FtpConnInfo;
 import org.inspien.data.api.Response;
 import org.inspien.util.Mapper;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -42,5 +43,16 @@ public class FtpTest {
         for (FTPFile file : files) {
             if (file.getName().contains("CHOYOUNGHYUN")) System.out.println(file.getName());
         }
+    }
+
+    @Test
+    public void downloadTest() throws IOException {
+        FtpClient ftpClient = new FtpClient();
+
+        ftpClient.setFtpConnInfo(ftpConnInfo);
+        ftpClient.download(
+                "INSPIEN_JSON_CHOYOUNGHYUN_20240304152026.txt",
+                AppConfigurer.getFILE_PATH() + "/DOWNLOAD_TEST.txt"
+        );
     }
 }

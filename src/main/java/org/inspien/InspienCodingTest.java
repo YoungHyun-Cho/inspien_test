@@ -5,8 +5,8 @@ import org.inspien._config.AppConfigurer;
 import org.inspien.client.api.ApiClient;
 import org.inspien.client.dbms.RemoteOracleDbmsClient;
 import org.inspien.client.ftp.FtpClient;
-import org.inspien.data.xml.ParsedXmlData;
 import org.inspien.data.api.Response;
+import org.inspien.util.FileHandler;
 import org.inspien.util.Mapper;
 import org.xml.sax.SAXException;
 
@@ -59,11 +59,7 @@ public class InspienCodingTest {
     private void insertToRemoteDb(Response response) throws IOException, ParserConfigurationException, SAXException, SQLException, ClassNotFoundException {
         remoteOracleDbmsClient.setDbConnInfo(response.getDbConnInfo());
         ArrayList<HashMap<String, String>> joined = Mapper.xmlDataToObject(response.getXmlData()).handle();
-        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
-        printMyDataSize(true);
         remoteOracleDbmsClient.createData(joined);
-        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT SUCCESS");
-        printMyDataSize(false);
     }
 
     // 과제 구현 사항 4️⃣
@@ -72,6 +68,7 @@ public class InspienCodingTest {
         ftpClient.setFtpConnInfo(response.getFtpConnInfo());
         String content = Mapper.jsonDataToObject(response.getJsonData()).handle();
         String fileName = composeFileName();
+        FileHandler.write(AppConfigurer.getFILE_PATH() + "/" + fileName, content);
         ftpClient.upload(fileName, content);
     }
 
@@ -81,15 +78,5 @@ public class InspienCodingTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedDateTime = now.format(formatter);
         return "INSPIEN_JSON_CHOYOUNGHYUN_" + formattedDateTime + ".txt";
-    }
-
-    // 인스피언의 ORACLE DBMS에 삽입된 나의 데이터의 개수를 계수한다.
-    private void printMyDataSize(boolean isBefore) throws SQLException, ClassNotFoundException {
-        HashMap<String, String> sqlComponent = new HashMap<>();
-        sqlComponent.put("tableName", "INSPIEN_XMLDATA_INFO");
-        sqlComponent.put("columns", "*");
-        sqlComponent.put("where", "SENDER = \'조영현\'");
-        ArrayList<HashMap<String, String>> result = remoteOracleDbmsClient.findDataBy(sqlComponent);
-        System.out.println((isBefore ? "   BEFORE " : "   AFTER ") + "INSERT : " + result.size());
     }
 }

@@ -1,5 +1,6 @@
 package org.inspien.client.dbms;
 
+import org.inspien._config.AppConfigurer;
 import org.inspien.data.api.DbConnInfo;
 import org.inspien.exception.DbConnInfoNotExistException;
 import org.inspien.util.SqlGenerator;
@@ -38,12 +39,16 @@ public class RemoteOracleDbmsClient {
     // 각 데이터에 SENDER와 CURRENT_DT 정보를 추가하고, 삽입 대상 테이블 이름을 지정한다.
     public void createData(ArrayList<HashMap<String, String>> sqlComponent) throws SQLException, ClassNotFoundException {
         checkDbConnInfo();
+        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
+        printMyDataSize(true);
         for (HashMap<String, String> row : sqlComponent) {
-            row.put("tableName", "INSPIEN_XMLDATA_INFO");
-            row.put("SENDER", "조영현");
+            row.put("tableName", dbConnInfo.getTableName());
+            row.put("SENDER", AppConfigurer.getUserInfo().getName());
             row.put("CURRENT_DT", "SYSDATE");
             save(row);
         }
+        System.out.println("✅ INSPIEN ORACLE DBMS : INSERT SUCCESS");
+        printMyDataSize(false);
     }
 
     // 인스피언의 ORACLE DBMS에 접근하여 SELECT문을 실행한다.
@@ -90,5 +95,15 @@ public class RemoteOracleDbmsClient {
         Class.forName("oracle.jdbc.driver.OracleDriver");
         String url = "jdbc:oracle:thin:@" + dbConnInfo.getHost() + ":" + dbConnInfo.getPort() + ":" + dbConnInfo.getSid();
         return DriverManager.getConnection(url, dbConnInfo.getUser(), dbConnInfo.getPassword());
+    }
+
+    // 인스피언의 ORACLE DBMS에 삽입된 나의 데이터의 개수를 계수한다.
+    private void printMyDataSize(boolean isBefore) throws SQLException, ClassNotFoundException {
+        HashMap<String, String> sqlComponent = new HashMap<>();
+        sqlComponent.put("tableName", dbConnInfo.getTableName());
+        sqlComponent.put("columns", "*");
+        sqlComponent.put("where", "SENDER = \'" + AppConfigurer.getUserInfo().getName() + "\'");
+        ArrayList<HashMap<String, String>> result = findDataBy(sqlComponent);
+        System.out.println((isBefore ? "   BEFORE " : "   AFTER ") + "INSERT : " + result.size());
     }
 }
