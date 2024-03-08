@@ -37,15 +37,15 @@ public class OracleDbmsClient {
 
     // 인스피언의 ORACLE DBMS에서 INSERT문 실행을 위한 public interface
     // 각 데이터에 SENDER와 CURRENT_DT 정보를 추가하고, 삽입 대상 테이블 이름을 지정한다.
-    public void createData(ArrayList<HashMap<String, String>> sqlComponent) throws SQLException, ClassNotFoundException {
+    public void createData(ArrayList<HashMap<String, String>> dataList) throws SQLException, ClassNotFoundException {
         checkDbConnInfo();
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT START");
         printMyDataSize(true);
-        for (HashMap<String, String> row : sqlComponent) {
-            row.put("tableName", dbConnInfo.getTableName());
-            row.put("SENDER", AppConfigurer.getUserInfo().getName());
-            row.put("CURRENT_DT", "SYSDATE");
-            save(row);
+        for (HashMap<String, String> data : dataList) {
+            data.put("tableName", dbConnInfo.getTableName());
+            data.put("SENDER", AppConfigurer.getUserInfo().getName());
+            data.put("CURRENT_DT", "SYSDATE");
+            save(data);
         }
         System.out.println("✅ INSPIEN ORACLE DBMS : INSERT SUCCESS");
         printMyDataSize(false);
@@ -77,7 +77,7 @@ public class OracleDbmsClient {
         return result;
     }
 
-    // 데이터와 DbConnInfo를 입력 받아, DbConnInfo가 가리키는 DBMS에 접근항려 데이터를 삽입한다.
+    // 데이터와 DbConnInfo를 입력 받아, DbConnInfo가 가리키는 DBMS에 접근하여 데이터를 삽입한다.
     private Integer save(HashMap<String, String> data) throws ClassNotFoundException, SQLException {
         Connection connection = connect();
         Statement statement = connection.createStatement();

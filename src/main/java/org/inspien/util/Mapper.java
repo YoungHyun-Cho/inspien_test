@@ -44,15 +44,13 @@ public class Mapper {
         Document document = parse(decodedXml);
         List<Order> orders = extractOrders(document);
         List<Item> items = extractItems(document);
-        ParsedXmlData parsedXmlData = new ParsedXmlData(orders, items);
-        return parsedXmlData;
+        return new ParsedXmlData(orders, items);
     }
 
     // 직렬화, 인코딩된 JSON_DATA를 역직렬화, 디코딩하여 ParsedJsonData의 인스턴스로 매핑한다.
     public static ParsedJsonData jsonDataToObject(String base64EncodedString) throws UnsupportedEncodingException, JsonProcessingException {
         String decodedJson = decode(base64EncodedString, CharSet.UTF_8);
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(decodedJson, ParsedJsonData.class);
+        return new ObjectMapper().readValue(decodedJson, ParsedJsonData.class);
     }
 
     // XML_DATA와 JSON_DATA을 디코딩한다.

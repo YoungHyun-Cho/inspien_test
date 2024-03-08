@@ -48,8 +48,10 @@ public class InspienCodingTest {
     // 과제 구현 사항 1️⃣ & 2️⃣
     // 인스피언 서버로 요청 전송 후, 수신한 응답을 Response로 변환하여 리턴한다.
     private Response getDataAndConnInfo() throws IOException {
-        String json = AppConfigurer.getUserInfo().serialize();
-        String response = apiClient.sendApiRequest(json, AppConfigurer.getAPI_URL());
+        String response = apiClient.sendApiRequest(
+                AppConfigurer.getUserInfo().serialize(),
+                AppConfigurer.getAPI_URL()
+        );
         System.out.println("✅ API REQUEST : SUCCESS");
         return Mapper.mapToResponse(response);
     }
@@ -64,7 +66,7 @@ public class InspienCodingTest {
 
     // 과제 구현 사항 4️⃣
     // INSPIEN FTP SERVER에 JSON_DATA를 핸들링하여 업로드한다.
-    private void uploadToFtpServer(Response response) throws IOException {
+    private void uploadToFtpServer(Response response) throws IOException, NoSuchFieldException, IllegalAccessException {
         ftpClient.setFtpConnInfo(response.getFtpConnInfo());
         String content = Mapper.jsonDataToObject(response.getJsonData()).handle();
         String fileName = composeFileName();

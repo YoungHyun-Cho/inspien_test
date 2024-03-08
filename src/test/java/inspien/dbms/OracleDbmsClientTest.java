@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class OracleDbmsTest {
+public class OracleDbmsClientTest {
     private static final ApiClient apiClient = new ApacheApiClient();
     private static final OracleDbmsClient ORACLE_DBMS_CLIENT = new OracleDbmsClient();
     @BeforeAll

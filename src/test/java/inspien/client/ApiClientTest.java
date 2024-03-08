@@ -17,8 +17,7 @@ public class ApiClientTest {
     private ApiClient apiClient = new ApacheApiClient();
 
     @Test
-    @DisplayName("요청 전송 후 응답으로 전송 받은 JSON 문자열을 DTO로 변환할 수 있어야 한다.")
-    public void requestAndParseJson() throws IOException {
+    public void sendApiRequestTest() throws IOException {
 
         Response response = Mapper.mapToResponse(
                 apiClient.sendApiRequest(

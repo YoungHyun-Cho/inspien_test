@@ -18,7 +18,6 @@ import java.io.*;
 public class FtpClient {
 
     private FtpConnInfo ftpConnInfo = null;
-    private static final String NAME = "CHOYOUNGHYUN";
 
     // 외부로부터 FtpConnInfo를 입력 받아 바인딩해주는 Setter
     public void setFtpConnInfo(FtpConnInfo ftpConnInfo) {
@@ -48,8 +47,7 @@ public class FtpClient {
         printMyFileList(ftpClient, fileName);
 
         ftpClient.logout();
-
-        if (ftpClient.isConnected()) ftpClient.disconnect();
+        ftpClient.disconnect();
     }
 
     // FTP Server로부터 파일을 다운로드하고, 실행 결과와 파일 목록을 출력한다.
@@ -74,8 +72,8 @@ public class FtpClient {
     private void connect(FTPClient ftpClient) throws IOException {
         ftpClient.connect(ftpConnInfo.getHost(), ftpConnInfo.getPort());
         ftpClient.login(ftpConnInfo.getUser(), ftpConnInfo.getPassword());
-        ftpClient.enterLocalPassiveMode();
-        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        ftpClient.enterLocalPassiveMode(); // 🟥 추가
+        ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
     }
 
     // 업로드 및 다운로드 실행의 결과 정보를 출력한다.
@@ -90,7 +88,7 @@ public class FtpClient {
         FTPFile[] files = ftpClient.listFiles();
         for (FTPFile file : files) {
             if (file.getName().equals(fileName)) System.out.println("   " + file.getName() + " <- NEW");
-            else if (file.getName().contains(NAME)) System.out.println("   " + file.getName());
+            else if (file.getName().contains("CHOYOUNGHYUN")) System.out.println("   " + file.getName());
         }
         System.out.println();
     }

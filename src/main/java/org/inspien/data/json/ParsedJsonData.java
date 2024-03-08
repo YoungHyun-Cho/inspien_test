@@ -22,10 +22,11 @@ public class ParsedJsonData {
     List<Record> records;
 
     // records의 각 요소로부터 serialize()를 호출하여, 과제 요구 사항(데이터 핸들링)을 수행한다.
-    public String handle() {
+    public String handle() throws NoSuchFieldException, IllegalAccessException {
         StringBuilder stringBuilder = new StringBuilder();
-        records.stream()
-                .forEach(record -> stringBuilder.append(record.serialize()));
+        for (Record record : records) {
+            stringBuilder.append(record.serialize());
+        }
         return stringBuilder.toString();
     }
 }

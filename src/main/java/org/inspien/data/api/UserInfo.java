@@ -25,8 +25,8 @@ public class UserInfo {
     @JsonProperty("E_MAIL")
     private String email;
 
+    // Jackson의 ObjectMapper를 사용하여 JSON 포맷으로 직렬화
     public String serialize() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
+        return new ObjectMapper().writeValueAsString(this);
     }
 }

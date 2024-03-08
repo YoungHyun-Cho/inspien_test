@@ -27,13 +27,13 @@ public class AppConfigurer {
 
     // 사용할 API Client의 구현체를 선택할 수 있다.
     // InspienCodingTest가 의존할 ApiClient를 결정하고 생성한다.
-    public static ApiClient client() {
+    public static ApiClient apiClient() {
         return new ApacheApiClient();
     }
 
-    // RemoteOracleDbmsClient의 인스턴스를 생성한다.
+    // OracleDbmsClient의 인스턴스를 생성한다.
     // 객체를 선택할 필요는 없지만 일관성을 위해 AppConfigurer에서 객체를 생성하도록 하였다.
-    public static OracleDbmsClient remoteOracleDbmsClient() {
+    public static OracleDbmsClient oracleDbmsClient() {
         return new OracleDbmsClient();
     }
 

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.lang.reflect.Field;
+
 /*
 * # Record.class
 *   - JSON_DATA의 record 배열 내 각 요소를 표현한다.
@@ -56,23 +58,24 @@ public class Record {
     @JsonProperty("GUID")
     private String guid;
 
-    // 하나의 Record 인스턴스가 가진 모든 필드를 순서에 맞게 직렬화한다.
-    public String serialize() {
-        return new StringBuilder()
-                .append(name).append("^")
-                .append(phone).append("^")
-                .append(email).append("^")
-                .append(birthDate).append("^")
-                .append(company).append("^")
-                .append(personalNumber).append("^")
-                .append(organizationNumber).append("^")
-                .append(country).append("^")
-                .append(region).append("^")
-                .append(city).append("^")
-                .append(street).append("^")
-                .append(zipCode).append("^")
-                .append(creditCard).append("^")
-                .append(guid).append("\n")
-                .toString();
+    // 하나의 Record 인스턴스가 가진 모든 필드를 순서에 맞게 직렬화한다. (Reflection API 사용)
+    public String serialize() throws NoSuchFieldException, IllegalAccessException {
+        StringBuilder result = new StringBuilder();
+        final String[] FIELD_NAMES = {
+                "name", "phone", "email", "birthDate", "company",
+                "personalNumber", "organizationNumber", "country",
+                "region", "city", "street", "zipCode", "creditCard", "guid"
+        };
+
+        for (int i = 0; i < FIELD_NAMES.length; i++) {
+            Field field = Record.class.getDeclaredField(FIELD_NAMES[i]);
+            Object value = field.get(this);
+
+            result.append(value != null ? value.toString() : "");
+
+            if (i < FIELD_NAMES.length - 1) result.append("^");
+        }
+        result.append("\n");
+        return result.toString();
     }
 }
